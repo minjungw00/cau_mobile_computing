@@ -1,5 +1,5 @@
-import 'package:cau_mobile_computing/stretch.dart';
-import 'package:cau_mobile_computing/presets.dart';
+import 'package:cau_mobile_computing/widgets/stretch_page.dart';
+import 'package:cau_mobile_computing/widgets/preset_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

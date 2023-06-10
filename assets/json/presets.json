@@ -1,0 +1,9 @@
+[
+    {
+        "id": 1,
+        "focusTime": 1,
+        "breakTime": 1,
+        "doNotDisturb": true,
+        "getGuide": true
+    }
+]
