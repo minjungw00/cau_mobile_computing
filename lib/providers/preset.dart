@@ -1,66 +1,58 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
-class Preset {
-  int? id = 0;
-  String? name;
-  int? focusTime = 50;
-  int? breakTime = 10;
-  bool? doNotDisturb = true;
-  bool? getGuide = true;
+class PresetsProvider with ChangeNotifier {
+  int currentID = 0;
+  List<dynamic> _presets = [];
+  List<dynamic> get presets => _presets;
 
-  Preset(
-      {this.id,
-      this.name,
-      this.focusTime,
-      this.breakTime,
-      this.doNotDisturb,
-      this.getGuide});
-
-  Preset.origin() {
-    id = 0;
-    name = "Preset $id";
-    focusTime = 50;
-    breakTime = 10;
-    doNotDisturb = true;
-    getGuide = true;
+  PresetsProvider() {
+    readJson().then((data) {
+      _presets = data;
+      notifyListeners();
+    });
   }
 
-  factory Preset.fromJson(Map<String, dynamic> json) => Preset(
-      id: json["id"],
-      name: json["name"],
-      focusTime: json['focusTime'],
-      breakTime: json['breakTime'],
-      doNotDisturb: json['doNotDisturb'],
-      getGuide: json['getGuide']);
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'focusTime': focusTime,
-        'breakTime': breakTime,
-        'doNotDisturb': doNotDisturb,
-        'getGuide': getGuide
-      };
-}
-
-class PresetList with ChangeNotifier {
-  final List<Preset>? presets;
-  PresetList({this.presets});
-
-  factory PresetList.fromJson(String jsonString) {
-    List<dynamic> listFromJson = json.decode(jsonString);
-    List<Preset> presets = <Preset>[];
-
-    presets = listFromJson.map((preset) => Preset.fromJson(preset)).toList();
-    return PresetList(presets: presets);
+  Future<List<dynamic>> readJson() async {
+    try {
+      final file = await _localFile;
+      String contents = await file.readAsString();
+      return jsonDecode(contents);
+    } catch (e) {
+      return [];
+    }
   }
 
-  Future<void> getPreset() async {
-    final routeFromJsonFile =
-        await rootBundle.loadString('assets/json/presets.json');
-    List placeList =
-        PresetList.fromJson(routeFromJsonFile).presets ?? <Preset>[];
+  Future<void> writeJson(List<dynamic> presets) async {
+    final file = await _localFile;
+
+    await file.writeAsString(jsonEncode(presets));
+    _presets = presets;
     notifyListeners();
   }
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/data.json');
+  }
+
+  void savePreset(Map<String, dynamic> preset) {
+    _presets.add(preset);
+    notifyListeners();
+  }
+
+  void deletePreset(int id) {
+    _presets.removeWhere((item) => item['id'] == id);
+    notifyListeners();
+  }
+
+  void updateJson() {}
 }
