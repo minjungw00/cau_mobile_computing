@@ -1,31 +1,38 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PresetsProvider with ChangeNotifier {
-  int currentID = 0;
-  List<dynamic> _presets = [];
-  List<dynamic> get presets => _presets;
+  Map<String, dynamic> _presets = {};
+  Map<String, dynamic> get presets => _presets;
+  late Timer _timer;
+  int _start = 0;
+  int get start => _start;
 
   PresetsProvider() {
     readJson().then((data) {
       _presets = data;
       notifyListeners();
     });
+
+    if (_presets.isEmpty) {
+      _presets = {'current': {}, 'id': 0, 'list': []};
+    }
   }
 
-  Future<List<dynamic>> readJson() async {
+  Future<Map<String, dynamic>> readJson() async {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
       return jsonDecode(contents);
     } catch (e) {
-      return [];
+      return {'current': {}, 'id': 0, 'list': []};
     }
   }
 
-  Future<void> writeJson(List<dynamic> presets) async {
+  Future<void> writeJson(Map<String, dynamic> presets) async {
     final file = await _localFile;
 
     await file.writeAsString(jsonEncode(presets));
@@ -45,14 +52,42 @@ class PresetsProvider with ChangeNotifier {
   }
 
   void savePreset(Map<String, dynamic> preset) {
-    _presets.add(preset);
+    _presets['list'].add(preset);
     notifyListeners();
   }
 
-  void deletePreset(int id) {
-    _presets.removeWhere((item) => item['id'] == id);
+  void deletePreset(Map<String, dynamic> preset) {
+    _presets['list'].remove(preset);
     notifyListeners();
   }
 
-  void updateJson() {}
+  void setCurrent(Map<String, dynamic> preset) {
+    _presets['current'] = preset;
+    notifyListeners();
+  }
+
+  void startTimer(bool isBreak) {
+    _start = _presets['current'][isBreak ? 'breakTime' : 'focusTime'] * 60;
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (_start < 1) {
+          timer.cancel();
+        } else {
+          _start = _start - 1;
+        }
+        notifyListeners();
+      },
+    );
+  }
+
+  void stopTimer() {
+    _timer.cancel();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 }

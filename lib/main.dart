@@ -28,23 +28,25 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const MainPage(title: 'Flutter Demo Home Page'),
+        home: const MainPage(),
       ),
     );
   }
 }
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key, required this.title});
-  final String title;
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+  late PresetsProvider _presetsProvider;
+
   @override
   Widget build(BuildContext context) {
+    _presetsProvider = Provider.of<PresetsProvider>(context);
     return Scaffold(
       body: Center(
         child: Column(
@@ -53,14 +55,16 @@ class _MainPageState extends State<MainPage> {
             ElevatedButton(
               child: const Text("Start"),
               onPressed: () {
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const StretchPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const FocusTimePage()),
+                  (route) => false,
                 );
               },
             ),
             ElevatedButton(
-              child: const Text("Presets"),
+              child: Text("${_presetsProvider.presets['current']['name']}"),
               onPressed: () {
                 Navigator.push(
                   context,

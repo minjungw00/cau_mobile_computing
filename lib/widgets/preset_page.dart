@@ -12,29 +12,65 @@ class PresetPage extends StatefulWidget {
 class _PresetPage extends State<PresetPage> {
   late PresetsProvider _presetsProvider;
 
+  bool showButton = false;
+
   List<Widget> presetList() {
     List<Widget> childs = [];
-    for (Map<String, dynamic> preset in _presetsProvider.presets) {
-      childs.add(InkWell(
-        onTap: () {},
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(5.0),
-              child: Text(preset['name']),
-            ),
-            Column(
-              children: [
-                Text('Focus Time : ${preset['focusTime']}'),
-                Text('Break Time : ${preset['breakTime']}'),
-                Text(
-                    'Do Not Disturb : ${preset['doNotDisturb'] ? 'ON' : 'OFF'}'),
-                Text('Focus Time : ${preset['getGuide'] ? 'ON' : 'OFF'}'),
-              ],
-            ),
-          ],
-        ),
+    if (_presetsProvider.presets.isEmpty) {
+      childs.add(const Center(
+        child: Text("No Presets"),
       ));
+    } else {
+      for (Map<String, dynamic> preset in _presetsProvider.presets['list']) {
+        childs.add(Column(
+          children: [
+            Card(
+              child: SizedBox(
+                width: double.infinity,
+                child: InkWell(
+                  onTap: () {
+                    showButton = showButton ? false : true;
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(preset['name']),
+                      ),
+                      Column(
+                        children: [
+                          Text('Focus Time : ${preset['focusTime']}'),
+                          Text('Break Time : ${preset['breakTime']}'),
+                          Text(
+                              'Do Not Disturb : ${preset['doNotDisturb'] ? 'ON' : 'OFF'}'),
+                          Text(
+                              'Focus Time : ${preset['getGuide'] ? 'ON' : 'OFF'}'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      _presetsProvider.deletePreset(preset);
+                    },
+                    child: const Text('Delete')),
+                ElevatedButton(
+                    onPressed: () {
+                      _presetsProvider.setCurrent(preset);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Select')),
+              ],
+            )
+          ],
+        ));
+      }
     }
     return childs;
   }
@@ -42,6 +78,7 @@ class _PresetPage extends State<PresetPage> {
   @override
   Widget build(BuildContext context) {
     _presetsProvider = Provider.of<PresetsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Presets'),
@@ -88,10 +125,10 @@ class _AddPressPageState extends State<AddPresetPage> {
   late PresetsProvider _presetsProvider;
 
   void addPreset() {
-    final id = _presetsProvider.presets.length;
-    if (text == '') text = 'Preset $id';
+    if (text == '') text = 'Preset ${_presetsProvider.presets['id']}';
+    _presetsProvider.presets['id']++;
     preset['name'] = text;
-    _presetsProvider.presets.add(preset);
+    _presetsProvider.presets['list'].add(preset);
     _presetsProvider.writeJson(_presetsProvider.presets);
   }
 
