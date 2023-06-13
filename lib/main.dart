@@ -52,19 +52,43 @@ class _MainPageState extends State<MainPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(
-              child: const Text("Start"),
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const FocusTimePage()),
-                  (route) => false,
-                );
-              },
+            SizedBox(
+              height: 200,
+              width: 200,
+              child: Card(
+                shape: const CircleBorder(),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const FocusTimePage()),
+                      (route) => false,
+                    );
+                  },
+                  child: const Center(
+                    child: Text(
+                      "Start",
+                      style: TextStyle(
+                        fontSize: 50,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 50,
             ),
             ElevatedButton(
-              child: Text("${_presetsProvider.presets['current']['name']}"),
+              child: Text(
+                "${_presetsProvider.presets['current']['name']}",
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.deepPurple,
+                ),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,

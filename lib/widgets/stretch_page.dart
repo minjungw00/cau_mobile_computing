@@ -2,7 +2,6 @@ import 'package:cau_mobile_computing/providers/preset.dart';
 import 'package:cau_mobile_computing/main.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class FocusTimePage extends StatefulWidget {
   const FocusTimePage({Key? key}) : super(key: key);
@@ -13,7 +12,6 @@ class FocusTimePage extends StatefulWidget {
 
 class _FocusTimePageState extends State<FocusTimePage> {
   late PresetsProvider _presetsProvider;
-  late Timer _timer;
 
   @override
   void initState() {
@@ -21,15 +19,7 @@ class _FocusTimePageState extends State<FocusTimePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       PresetsProvider auth =
           Provider.of<PresetsProvider>(context, listen: false);
-      auth.startTimer(false);
-      _timer =
-          Timer(Duration(seconds: auth.presets['current']['focusTime']), () {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const BreakTimePage()),
-          (route) => false,
-        );
-      });
+      auth.startTimer(false, context);
     });
   }
 
@@ -39,26 +29,59 @@ class _FocusTimePageState extends State<FocusTimePage> {
 
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          child: Text(
-              "${_presetsProvider.start ~/ 60} : ${(_presetsProvider.start % 60).toInt()}"),
-          onPressed: () {
-            _presetsProvider.stopTimer();
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const MainPage()),
-              (route) => false,
-            );
-          },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Focus Time",
+              style: TextStyle(
+                fontSize: 50,
+                color: Colors.deepPurple,
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            SizedBox(
+              width: 200,
+              height: 200,
+              child: Card(
+                shape: const CircleBorder(),
+                child: InkWell(
+                  onTap: () {
+                    _presetsProvider.stopTimer();
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MainPage()),
+                      (route) => false,
+                    );
+                  },
+                  child: Center(
+                    child: Text(
+                      "${_presetsProvider.start ~/ 60 < 10 ? '0' : ''}${_presetsProvider.start ~/ 60}:${_presetsProvider.start % 60 < 10 ? '0' : ''}${(_presetsProvider.start % 60).toInt()}",
+                      style: const TextStyle(
+                        fontSize: 50,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            const Text(
+              "Click Timer to Stop Routine",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.deepPurple,
+              ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 }
 
@@ -71,7 +94,6 @@ class BreakTimePage extends StatefulWidget {
 
 class _BreakTimePageState extends State<BreakTimePage> {
   late PresetsProvider _presetsProvider;
-  late Timer _timer;
 
   @override
   void initState() {
@@ -79,15 +101,7 @@ class _BreakTimePageState extends State<BreakTimePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       PresetsProvider auth =
           Provider.of<PresetsProvider>(context, listen: false);
-      auth.startTimer(true);
-      _timer =
-          Timer(Duration(seconds: auth.presets['current']['breakTime']), () {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const FocusTimePage()),
-          (route) => false,
-        );
-      });
+      auth.startTimer(true, context);
     });
   }
 
@@ -97,25 +111,58 @@ class _BreakTimePageState extends State<BreakTimePage> {
 
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          child: Text(
-              "${_presetsProvider.start ~/ 60} : ${(_presetsProvider.start % 60).toInt()}"),
-          onPressed: () {
-            _presetsProvider.stopTimer();
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const MainPage()),
-              (route) => false,
-            );
-          },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Break Time",
+              style: TextStyle(
+                fontSize: 50,
+                color: Colors.deepPurple,
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            SizedBox(
+              width: 200,
+              height: 200,
+              child: Card(
+                shape: const CircleBorder(),
+                child: InkWell(
+                  onTap: () {
+                    _presetsProvider.stopTimer();
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MainPage()),
+                      (route) => false,
+                    );
+                  },
+                  child: Center(
+                    child: Text(
+                      "${_presetsProvider.start ~/ 60 < 10 ? '0' : ''}${_presetsProvider.start ~/ 60}:${_presetsProvider.start % 60 < 10 ? '0' : ''}${(_presetsProvider.start % 60).toInt()}",
+                      style: const TextStyle(
+                        fontSize: 50,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            const Text(
+              "Click Timer to Stop Routine",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.deepPurple,
+              ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 }

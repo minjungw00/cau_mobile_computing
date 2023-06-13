@@ -25,49 +25,110 @@ class _PresetPage extends State<PresetPage> {
         childs.add(Column(
           children: [
             Card(
+              shape: const ContinuousRectangleBorder(),
               child: SizedBox(
-                width: double.infinity,
-                child: InkWell(
-                  onTap: () {
-                    showButton = showButton ? false : true;
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(preset['name']),
+                width: 400,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        preset['name'],
+                        style: const TextStyle(
+                          fontSize: 30,
+                          color: Colors.deepPurple,
+                        ),
                       ),
-                      Column(
-                        children: [
-                          Text('Focus Time : ${preset['focusTime']}'),
-                          Text('Break Time : ${preset['breakTime']}'),
-                          Text(
-                              'Do Not Disturb : ${preset['doNotDisturb'] ? 'ON' : 'OFF'}'),
-                          Text(
-                              'Focus Time : ${preset['getGuide'] ? 'ON' : 'OFF'}'),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              'Focus Time : ${preset['focusTime']}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              'Break Time : ${preset['breakTime']}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              'Do Not Disturb : ${preset['doNotDisturb'] ? 'ON' : 'OFF'}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              'Focus Time : ${preset['getGuide'] ? 'ON' : 'OFF'}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                    onPressed: () {
-                      _presetsProvider.deletePreset(preset);
-                    },
-                    child: const Text('Delete')),
+                  style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(const Size(190, 40)),
+                    shape: MaterialStateProperty.all(
+                        const ContinuousRectangleBorder()),
+                  ),
+                  onPressed: () {
+                    _presetsProvider.deletePreset(preset);
+                  },
+                  child: const Text(
+                    'Delete',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
                 ElevatedButton(
-                    onPressed: () {
-                      _presetsProvider.setCurrent(preset);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Select')),
+                  style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(const Size(190, 40)),
+                    shape: MaterialStateProperty.all(
+                        const ContinuousRectangleBorder()),
+                  ),
+                  onPressed: () {
+                    _presetsProvider.setCurrent(preset);
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Select',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
               ],
-            )
+            ),
+            const SizedBox(
+              height: 20,
+            ),
           ],
         ));
       }
@@ -81,14 +142,28 @@ class _PresetPage extends State<PresetPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Presets'),
+        iconTheme: const IconThemeData(
+          color: Colors.deepPurple,
+        ),
+        title: const Text(
+          'Presets',
+          style: TextStyle(
+            color: Colors.deepPurple,
+          ),
+        ),
       ),
       body: ListView(
         children: presetList(),
       ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
-        label: const Text('Add New Preset'),
+        label: const Text(
+          'Add New',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.deepPurple,
+          ),
+        ),
         tooltip: 'Add New Preset',
         onPressed: () {
           Navigator.push(
@@ -137,18 +212,32 @@ class _AddPressPageState extends State<AddPresetPage> {
     _presetsProvider = Provider.of<PresetsProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Preset'),
+        iconTheme: const IconThemeData(
+          color: Colors.deepPurple,
+        ),
+        title: const Text(
+          'Add New Preset',
+          style: TextStyle(
+            color: Colors.deepPurple,
+          ),
+        ),
       ),
       body: ListView(
         children: [
           Container(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Padding(
                     padding: EdgeInsets.fromLTRB(0.0, 0.0, 200.0, 0.0),
-                    child: Text("Name"),
+                    child: Text(
+                      "Name",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
                   ),
                   Expanded(
                     child: TextField(
@@ -158,11 +247,17 @@ class _AddPressPageState extends State<AddPresetPage> {
                 ],
               )),
           Container(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Focus Time"),
+                  const Text(
+                    "Focus Time",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
                   DropdownButton(
                     value: preset['focusTime'],
                     items: focusTimeList.map((value) {
@@ -178,11 +273,17 @@ class _AddPressPageState extends State<AddPresetPage> {
                 ],
               )),
           Container(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Break Time"),
+                  const Text(
+                    "Break Time",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
                   DropdownButton(
                     value: preset['breakTime'],
                     items: breakTimeList.map((value) {
@@ -198,11 +299,17 @@ class _AddPressPageState extends State<AddPresetPage> {
                 ],
               )),
           Container(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Enable Do Not Disturb"),
+                  const Text(
+                    "Enable Do Not Disturb",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
                   Checkbox(
                     value: preset['doNotDisturb'],
                     onChanged: (value) {
@@ -214,11 +321,17 @@ class _AddPressPageState extends State<AddPresetPage> {
                 ],
               )),
           Container(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Enable Stretching Guide"),
+                  const Text(
+                    "Enable Stretching Guide",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
                   Checkbox(
                     value: preset['getGuide'],
                     onChanged: (value) {
@@ -233,7 +346,13 @@ class _AddPressPageState extends State<AddPresetPage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
-        label: const Text('Add Preset'),
+        label: const Text(
+          'Add Preset',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.deepPurple,
+          ),
+        ),
         tooltip: 'Add Preset',
         onPressed: () {
           addPreset();

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:cau_mobile_computing/widgets/stretch_page.dart';
 
 class PresetsProvider with ChangeNotifier {
   Map<String, dynamic> _presets = {};
@@ -66,13 +67,20 @@ class PresetsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void startTimer(bool isBreak) {
+  void startTimer(bool isBreak, BuildContext context) {
     _start = _presets['current'][isBreak ? 'breakTime' : 'focusTime'] * 60;
     _timer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
         if (_start < 1) {
           timer.cancel();
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    isBreak ? const FocusTimePage() : const BreakTimePage()),
+            (route) => false,
+          );
         } else {
           _start = _start - 1;
         }
