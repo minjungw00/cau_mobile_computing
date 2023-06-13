@@ -117,18 +117,18 @@ class _BreakTimePageState extends State<BreakTimePage> {
             const Text(
               "Break Time",
               style: TextStyle(
-                fontSize: 50,
+                fontSize: 30,
                 color: Colors.deepPurple,
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 20,
             ),
             SizedBox(
-              width: 200,
-              height: 200,
+              width: 100,
+              height: 50,
               child: Card(
-                shape: const CircleBorder(),
+                shape: const StadiumBorder(),
                 child: InkWell(
                   onTap: () {
                     _presetsProvider.stopTimer();
@@ -142,7 +142,7 @@ class _BreakTimePageState extends State<BreakTimePage> {
                     child: Text(
                       "${_presetsProvider.start ~/ 60 < 10 ? '0' : ''}${_presetsProvider.start ~/ 60}:${_presetsProvider.start % 60 < 10 ? '0' : ''}${(_presetsProvider.start % 60).toInt()}",
                       style: const TextStyle(
-                        fontSize: 50,
+                        fontSize: 20,
                         color: Colors.deepPurple,
                       ),
                     ),
@@ -151,15 +151,52 @@ class _BreakTimePageState extends State<BreakTimePage> {
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 20,
             ),
             const Text(
               "Click Timer to Stop Routine",
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 10,
                 color: Colors.deepPurple,
               ),
             ),
+            if (_presetsProvider.presets['current']['getGuide'])
+              const SizedBox(
+                height: 20,
+              ),
+            if (_presetsProvider.presets['current']['getGuide'])
+              SizedBox(
+                width: 400,
+                height: 600,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10.0),
+                        child: const Image(
+                          image: AssetImage(
+                              'assets/images/stretching_exercises.png'),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(10.0),
+                        child: const Text(
+                          '''1. Raise one hand up and stretch to the other.
+2. Repeat 5 sets of 30 seconds each.
+3. After the set, stretch the other side in the same way.''',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       ),

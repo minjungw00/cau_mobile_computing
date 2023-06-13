@@ -15,12 +15,16 @@ class PresetsProvider with ChangeNotifier {
   PresetsProvider() {
     readJson().then((data) {
       _presets = data;
-      notifyListeners();
     });
 
     if (_presets.isEmpty) {
-      _presets = {'current': {}, 'id': 0, 'list': []};
+      Map<String, dynamic> current = {};
+      List<Map<String, dynamic>> list = [];
+
+      _presets = {'current': current, 'id': 0, 'list': list};
     }
+
+    notifyListeners();
   }
 
   Future<Map<String, dynamic>> readJson() async {
@@ -29,7 +33,10 @@ class PresetsProvider with ChangeNotifier {
       String contents = await file.readAsString();
       return jsonDecode(contents);
     } catch (e) {
-      return {'current': {}, 'id': 0, 'list': []};
+      Map<String, dynamic> current = {};
+      List<Map<String, dynamic>> list = [];
+
+      return {'current': current, 'id': 0, 'list': list};
     }
   }
 
@@ -54,16 +61,26 @@ class PresetsProvider with ChangeNotifier {
 
   void savePreset(Map<String, dynamic> preset) {
     _presets['list'].add(preset);
+    writeJson(_presets);
     notifyListeners();
   }
 
   void deletePreset(Map<String, dynamic> preset) {
+    if (_presets['current']['name'] == preset['name'] &&
+        _presets['current']['focusTime'] == preset['focusTime'] &&
+        _presets['current']['breakTime'] == preset['breakTime'] &&
+        _presets['current']['doNotDisturb'] == preset['doNotDisturb'] &&
+        _presets['current']['getGuide'] == preset['getGuide']) {
+      _presets['current'] = {};
+    }
     _presets['list'].remove(preset);
+    writeJson(_presets);
     notifyListeners();
   }
 
   void setCurrent(Map<String, dynamic> preset) {
     _presets['current'] = preset;
+    writeJson(_presets);
     notifyListeners();
   }
 

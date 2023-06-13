@@ -185,8 +185,8 @@ class AddPresetPage extends StatefulWidget {
 }
 
 class _AddPressPageState extends State<AddPresetPage> {
-  final focusTimeList = [5, 10, 15, 20, 25, 30, 40, 50, 60, 90, 120];
-  final breakTimeList = [5, 10, 15, 20, 25, 30];
+  final focusTimeList = [1, 5, 10, 15, 20, 25, 30, 40, 50, 60, 90, 120];
+  final breakTimeList = [1, 5, 10, 15, 20, 25, 30];
   Map<String, dynamic> preset = {
     'id': 0,
     'name': 'Preset',
@@ -203,8 +203,7 @@ class _AddPressPageState extends State<AddPresetPage> {
     if (text == '') text = 'Preset ${_presetsProvider.presets['id']}';
     _presetsProvider.presets['id']++;
     preset['name'] = text;
-    _presetsProvider.presets['list'].add(preset);
-    _presetsProvider.writeJson(_presetsProvider.presets);
+    _presetsProvider.savePreset(preset);
   }
 
   @override

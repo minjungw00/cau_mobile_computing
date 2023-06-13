@@ -59,12 +59,35 @@ class _MainPageState extends State<MainPage> {
                 shape: const CircleBorder(),
                 child: InkWell(
                   onTap: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const FocusTimePage()),
-                      (route) => false,
-                    );
+                    if (!_presetsProvider.presets['current']
+                        .containsKey('name')) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const AlertDialog(
+                              content: SizedBox(
+                                width: 200,
+                                height: 50,
+                                child: Center(
+                                  child: Text(
+                                    "You must select preset!",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.deepPurple,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                    } else {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const FocusTimePage()),
+                        (route) => false,
+                      );
+                    }
                   },
                   child: const Center(
                     child: Text(
@@ -83,7 +106,7 @@ class _MainPageState extends State<MainPage> {
             ),
             ElevatedButton(
               child: Text(
-                "${_presetsProvider.presets['current']['name']}",
+                "${!_presetsProvider.presets['current'].containsKey('name') ? 'No Presets' : _presetsProvider.presets['current']['name']}",
                 style: const TextStyle(
                   fontSize: 20,
                   color: Colors.deepPurple,
