@@ -241,6 +241,9 @@ class _AddPressPageState extends State<AddPresetPage> {
                   Expanded(
                     child: TextField(
                       controller: textController,
+                      onChanged: (value) {
+                        text = value;
+                      },
                     ),
                   ),
                 ],
