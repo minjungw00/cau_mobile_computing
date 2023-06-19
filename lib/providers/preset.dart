@@ -13,9 +13,13 @@ class PresetsProvider with ChangeNotifier {
   int get start => _start;
 
   PresetsProvider() {
-    readJson().then((data) {
-      _presets = data;
-    });
+    init();
+  }
+
+  Future<int> init() async {
+    var data = await readJson();
+
+    _presets = data;
 
     if (_presets.isEmpty) {
       Map<String, dynamic> current = {};
@@ -25,6 +29,7 @@ class PresetsProvider with ChangeNotifier {
     }
 
     notifyListeners();
+    return 0;
   }
 
   Future<Map<String, dynamic>> readJson() async {
